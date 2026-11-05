@@ -1,0 +1,105 @@
+.ds-dialog-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: var(--surface-scrim);
+    font-family: var(--font-sans);
+    color: var(--text-body);
+}
+
+/* Nested dialogs (pickers, confirmations) sit above their parent. */
+.ds-dialog-scrim ~ .ds-dialog-scrim { z-index: 1510; }
+.ds-dialog-scrim ~ .ds-dialog-scrim ~ .ds-dialog-scrim { z-index: 1520; }
+
+.ds-dialog {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 100%;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-dialog);
+    box-shadow: var(--shadow-dialog);
+    overflow: hidden;
+    outline: none;
+}
+
+[data-theme="dark"] .ds-dialog { color-scheme: dark; }
+
+.ds-dialog.is-sm { max-width: 420px; }
+.ds-dialog.is-md { max-width: 640px; }
+.ds-dialog.is-lg { max-width: 880px; height: min(760px, 100%); }
+.ds-dialog.is-xl { max-width: 1180px; height: min(860px, 100%); }
+
+.ds-dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px var(--dialog-padding);
+    border-bottom: 1px solid var(--border-default);
+}
+
+.ds-dialog-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+    border-radius: var(--radius-icon-tile);
+    background: var(--tile-active-bg);
+    color: var(--color-primary);
+}
+
+.ds-dialog-titles { flex: 1; min-width: 0; }
+
+.ds-dialog-title {
+    margin: 0;
+    font: var(--weight-bold) var(--text-xl)/1.2 var(--font-sans);
+    color: var(--text-heading);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ds-dialog-subtitle {
+    margin: 3px 0 0;
+    font: var(--weight-normal) var(--text-sm)/1.35 var(--font-sans);
+    color: var(--text-muted);
+}
+
+.ds-dialog-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: var(--dialog-padding);
+}
+
+.ds-dialog-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 14px var(--dialog-padding);
+    border-top: 1px solid var(--border-default);
+    background: var(--surface-card);
+}
+
+@media (max-width: 767px) {
+    .ds-dialog-scrim { padding: 0; }
+    .ds-dialog-scrim .ds-dialog.is-lg,
+    .ds-dialog-scrim .ds-dialog.is-xl,
+    .ds-dialog-scrim .ds-dialog.is-md {
+        max-width: none;
+        height: 100%;
+        border: 0;
+        border-radius: 0;
+    }
+    .ds-dialog.is-sm { margin: 16px; }
+    .ds-dialog-header, .ds-dialog-footer { padding-left: 16px; padding-right: 16px; }
+    .ds-dialog-body { padding: 16px; }
+}

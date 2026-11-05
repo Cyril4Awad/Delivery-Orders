@@ -1,0 +1,714 @@
+/* Orders screen - design system tokens (theme/brand-theme.css) */
+
+html, body { background: var(--surface-page); }
+
+.ord-app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    background: var(--surface-page);
+    color: var(--text-body);
+    font: var(--weight-normal) var(--text-base)/var(--leading-normal) var(--font-sans);
+}
+[data-theme="dark"] .ord-app { color-scheme: dark; }
+
+/* ---------- Top bar ---------- */
+.ord-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--topbar-height);
+    padding: 0 var(--page-padding);
+    background: var(--surface-chrome);
+    border-bottom: 1px solid var(--border-default);
+}
+
+/* Light signal along the top edge while a call is ringing */
+.ord-topbar::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 3px;
+    background: var(--color-success);
+    opacity: 0;
+}
+.ord-app.is-ringing .ord-topbar::after { animation: ord-flash 1s ease-in-out infinite; }
+
+.ord-brand { display: flex; flex-direction: column; line-height: 1.1; }
+.ord-brand-name { font: var(--weight-bold) var(--text-2xl)/1.1 var(--font-sans); color: var(--color-primary); letter-spacing: var(--tracking-tight); }
+.ord-brand-sub {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 3px;
+    font: var(--weight-semibold) var(--text-2xs)/1 var(--font-sans);
+    letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-muted);
+}
+.ord-dot { width: 6px; height: 6px; border-radius: var(--radius-pill); background: var(--color-primary); }
+
+.ord-topbar-actions { display: flex; align-items: center; gap: 6px; }
+
+.ord-live {
+    display: inline-flex; align-items: center; gap: 6px; margin-right: 6px;
+    padding: 4px 10px; border-radius: var(--radius-pill);
+    font: var(--weight-medium) var(--text-xs)/1 var(--font-sans);
+    background: var(--surface-header); color: var(--text-muted);
+}
+.ord-live-dot { width: 7px; height: 7px; border-radius: var(--radius-pill); background: var(--gray-400); }
+.ord-live.is-on { background: var(--color-success-soft); color: var(--color-success); }
+.ord-live.is-on .ord-live-dot { background: var(--color-success); }
+
+/* ---------- Page ---------- */
+/* The card fills the space under the top bar; only the table rows scroll, so the header and pager stay in view */
+.ord-main { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: var(--page-padding); }
+
+.ord-card {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+
+.ord-card-header {
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding: var(--card-padding);
+    border-bottom: 1px solid var(--border-default);
+}
+
+.ord-title { display: flex; align-items: center; gap: 12px; }
+.ord-title h1 { margin: 0; font: var(--weight-bold) var(--text-2xl)/1.2 var(--font-sans); color: var(--text-heading); }
+.ord-title p { margin: 2px 0 0; font-size: var(--text-sm); color: var(--text-muted); }
+.ord-title-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: var(--radius-icon-tile);
+    background: var(--tile-active-bg); color: var(--color-primary);
+}
+
+.ord-actions { display: flex; align-items: center; gap: 10px; }
+
+.ord-toolbar {
+    flex-shrink: 0;
+    display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap;
+    padding: 12px var(--card-padding);
+    border-bottom: 1px solid var(--border-default);
+}
+
+.ord-search { position: relative; }
+.ord-search > .ds-field { padding-left: 36px; }
+.ord-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-placeholder); pointer-events: none; }
+.ord-toolbar-search { width: min(340px, 100%); margin-left: auto; }
+
+/* ---------- From / To date filter (DateRange.jsx) ---------- */
+.ord-daterange {
+    display: inline-flex; align-items: center; gap: 4px 10px; flex-wrap: wrap;
+    min-height: var(--field-height, 38px); padding: 2px 6px 2px 10px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-field); border-radius: var(--radius-field);
+    color: var(--text-label); font-size: var(--text-sm);
+}
+.ord-daterange.is-set { border-color: var(--border-focus); background: var(--surface-selected); }
+.ord-daterange-icon { color: var(--text-muted); flex: 0 0 auto; }
+.ord-daterange.is-set .ord-daterange-icon { color: var(--color-primary); }
+.ord-daterange label { display: inline-flex; align-items: center; gap: 6px; margin: 0; cursor: pointer; }
+.ord-daterange label > span { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--text-muted); }
+.ord-daterange input[type="date"] {
+    height: 30px; padding: 0 4px; border: 0; border-radius: var(--radius-sm, 6px);
+    background: transparent; color: var(--text-body); font: inherit; font-variant-numeric: tabular-nums;
+    color-scheme: light;
+}
+[data-theme="dark"] .ord-daterange input[type="date"] { color-scheme: dark; }
+.ord-daterange input[type="date"]:focus { outline: none; box-shadow: var(--ring-focus); }
+.ord-daterange-clear {
+    display: inline-flex; padding: 4px; border: 0; border-radius: var(--radius-pill);
+    background: transparent; color: var(--text-muted); cursor: pointer;
+}
+.ord-daterange-clear:hover { color: var(--text-heading); background: var(--surface-hover); }
+/* in the bell: a full-width line under the search */
+.ord-daterange.is-compact { display: flex; margin: 8px 16px 2px; min-height: 34px; font-size: var(--text-xs); }
+.ord-daterange.is-compact input[type="date"] { height: 26px; font-size: var(--text-xs); }
+
+/* ---------- Table ---------- */
+.ord-table-wrap { flex: 1; min-height: 0; overflow: auto; }
+.ord-table { width: 100%; border-collapse: collapse; font-size: var(--text-base); }
+.ord-table th {
+    position: sticky; top: 0; z-index: 1;
+    padding: 12px 16px;
+    font-size: var(--text-sm);
+    background: var(--surface-header);
+    color: var(--text-label);
+    font-weight: var(--weight-bold);
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border-table);
+}
+.ord-table td {
+    padding: 14px 16px;
+    line-height: 1.45;
+    border-bottom: 1px solid var(--border-table);
+    vertical-align: middle;
+}
+.ord-table tbody tr { transition: background-color var(--duration-fast) var(--ease-standard); }
+.ord-table tbody tr:hover { background: var(--surface-hover); }
+.ord-table tbody tr.is-done td { color: var(--text-muted); }
+.ord-table tbody tr.is-done .ord-text { text-decoration: line-through; text-decoration-color: var(--border-strong); }
+
+.ord-num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ord-muted { color: var(--text-muted); }
+.ord-text { max-width: 560px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ord-text-sep { color: var(--text-muted); font-weight: var(--weight-bold); }
+
+/* Client cell: the name, and the delivery address under it */
+.ord-cell-client { max-width: 280px; font-weight: var(--weight-medium); overflow-wrap: anywhere; }
+/* a long typed-in status stays a pill, cut with "..." (the full text is in the list) */
+.ord-table .ord-status { max-width: 220px; }
+.ord-cell-address {
+    display: flex; align-items: center; gap: 4px; max-width: 260px; margin-top: 2px;
+    font-size: var(--text-xs); color: var(--text-muted);
+}
+.ord-cell-address svg { flex: 0 0 auto; }
+.ord-cell-address span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ord-cell-address.is-other { color: var(--color-primary); }
+
+/* Order status (StatusPicker.jsx): a pill that opens the status list.
+   "Ready to be delivered" is violet - the theme has no violet, so it is defined here for both themes. */
+:root { --ord-delivery: #7c3aed; --ord-delivery-soft: #f3e8ff; }
+[data-theme="dark"] { --ord-delivery: #b197fc; --ord-delivery-soft: rgba(177, 151, 252, .16); }
+.ord-status {
+    display: inline-flex; align-items: center; gap: 6px; max-width: 100%;
+    padding: 4px 8px 4px 10px; border: 1px solid transparent; border-radius: var(--radius-pill);
+    font: var(--weight-semibold) var(--text-xs)/1.4 var(--font-sans);
+    background: var(--surface-sunken); color: var(--text-label);
+    cursor: pointer; transition: var(--transition-control);
+}
+.ord-status::before { content: ""; flex: 0 0 auto; width: 7px; height: 7px; border-radius: var(--radius-pill); background: currentColor; }
+.ord-status-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* under a Completed pill: when it was completed */
+.ord-completed-at { margin-top: 4px; font-size: var(--text-2xs); color: var(--text-muted); font-variant-numeric: tabular-nums; line-height: 1.3; }
+.ord-status-chevron { flex: 0 0 auto; opacity: .7; }
+.ord-status.is-process { background: var(--color-warning-soft); color: var(--color-warning); }
+.ord-status.is-ready   { background: var(--tile-active-bg);     color: var(--color-primary); }
+.ord-status.is-delivery { background: var(--ord-delivery-soft); color: var(--ord-delivery); }
+.ord-status.is-done    { background: var(--color-success-soft); color: var(--color-success); }
+.ord-status.is-custom  { border-color: var(--border-default); }
+.ord-status:hover, .ord-status[aria-expanded="true"] { border-color: currentColor; }
+.ord-status:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+.ord-status.is-static, .ord-status.is-static:hover { cursor: default; border-color: transparent; }
+/* In the order modal: a full-width field */
+.ord-status.is-field {
+    width: 100%; height: 40px; padding: 0 12px;
+    border-radius: var(--radius-field); font-size: var(--text-base);
+}
+.ord-status.is-field .ord-status-text { flex: 1; text-align: left; }
+
+.ord-status-pop {
+    position: fixed; z-index: 1650;
+    display: flex; flex-direction: column;
+    padding: 6px;
+    background: var(--surface-card); color: var(--text-body);
+    border: 1px solid var(--border-default); border-radius: var(--radius-md);
+    box-shadow: var(--shadow-dropdown);
+    font-family: var(--font-sans);
+}
+.ord-status-type {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 10px; margin-bottom: 4px;
+    border: 1px solid var(--border-field); border-radius: var(--radius-field);
+    color: var(--text-muted);
+}
+.ord-status-type:focus-within { border-color: var(--border-focus); box-shadow: var(--ring-focus); }
+.ord-status-input {
+    flex: 1; min-width: 0; height: 34px; padding: 0;
+    border: 0; outline: none; background: transparent;
+    font: var(--text-sm) var(--font-sans); color: var(--text-body);
+}
+.ord-status-input::placeholder { color: var(--text-placeholder); }
+.ord-status-list { display: flex; flex-direction: column; }
+.ord-status-option {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 9px 10px; border: 0; border-radius: var(--radius-sm, 6px);
+    background: transparent; color: var(--text-body); text-align: left;
+    font: var(--text-sm) var(--font-sans); cursor: pointer;
+}
+.ord-status-option.is-active { background: var(--surface-hover); }
+.ord-status-option-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ord-status-dot { flex: 0 0 auto; width: 9px; height: 9px; border-radius: var(--radius-pill); background: var(--text-muted); }
+.ord-status-dot.is-process { background: var(--color-warning); }
+.ord-status-dot.is-ready   { background: var(--color-primary); }
+.ord-status-dot.is-delivery { background: var(--ord-delivery); }
+.ord-status-dot.is-done    { background: var(--color-success); }
+.ord-status-dot-icon { flex: 0 0 auto; color: var(--text-muted); }
+.ord-status-check { flex: 0 0 auto; color: var(--color-primary); }
+.ord-status-now { margin-top: 4px; padding: 6px 10px 2px; border-top: 1px solid var(--border-default); font-size: var(--text-xs); color: var(--text-muted); }
+
+.ord-empty { padding: 40px 20px; text-align: center; color: var(--text-muted); }
+
+
+.ord-error { margin-right: auto; color: var(--color-danger); font-size: var(--text-sm); }
+
+/* ---------- Incoming call popup: top center, above dialogs (1500+), below toasts (2000) ----------
+   Large by default; .is-compact (an order is open) is the smaller card, so the form stays usable. */
+.ord-callpop {
+    position: fixed; top: 20px; left: 50%; z-index: 1700;
+    display: flex; flex-direction: column; align-items: stretch; gap: 10px;
+    width: min(760px, calc(100vw - 32px));
+    transform: translateX(-50%);
+    font-family: var(--font-sans);
+}
+.ord-callpop-card {
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; gap: 20px;
+    padding: 22px 24px 26px;
+    background: var(--surface-card); color: var(--text-body);
+    border: 2px solid var(--color-success);
+    border-radius: var(--radius-card);
+    animation: ord-callpop-in .28s cubic-bezier(.2, .9, .3, 1.2), ord-glow 1.4s ease-in-out .3s infinite;
+}
+.ord-callpop-icon {
+    display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+    width: 72px; height: 72px; border-radius: var(--radius-pill);
+    background: var(--color-success); color: #fff;
+    animation: ord-shake 1.2s ease-in-out infinite;
+}
+.ord-callpop-icon svg { width: 34px; height: 34px; }
+.ord-callpop-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; line-height: 1.25; }
+.ord-callpop-label {
+    font: var(--weight-bold) var(--text-sm)/1.4 var(--font-sans);
+    letter-spacing: .08em; text-transform: uppercase; color: var(--color-success);
+}
+.ord-callpop-who {
+    font: var(--weight-bold) 26px/1.2 var(--font-sans); color: var(--text-heading);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ord-callpop-number {
+    font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--text-label); font-variant-numeric: tabular-nums;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ord-callpop-actions { display: flex; flex-direction: column; gap: 8px; flex: 0 0 auto; }
+.ord-callpop-actions .ds-btn { height: 44px; padding: 0 20px; font-size: var(--text-md); justify-content: center; }
+.ord-callpop-actions .ds-btn svg { width: 18px; height: 18px; }
+.ord-callpop-ignore { background: var(--surface-card); border: 1px solid var(--border-default); color: var(--text-label); }
+.ord-callpop-ignore:hover { color: var(--color-danger); border-color: var(--color-danger); }
+/* Take order on top in the large card */
+.ord-callpop-answer { order: -1; background: var(--color-success); border: 1px solid var(--color-success); color: #fff; }
+.ord-callpop-answer:hover { background: var(--color-success-hover, var(--green-700)); }
+
+/* Compact: an order is open */
+.ord-callpop.is-compact { top: 16px; gap: 8px; width: min(540px, calc(100vw - 32px)); }
+.is-compact .ord-callpop-card { gap: 14px; padding: 14px 16px 16px; border-width: 1px; }
+.is-compact .ord-callpop-icon { width: 46px; height: 46px; }
+.is-compact .ord-callpop-icon svg { width: 20px; height: 20px; }
+.is-compact .ord-callpop-text { gap: 0; }
+.is-compact .ord-callpop-label { font-size: var(--text-2xs); letter-spacing: .06em; }
+.is-compact .ord-callpop-who { font: var(--weight-semibold) var(--text-md)/1.3 var(--font-sans); }
+.is-compact .ord-callpop-number { font-size: var(--text-sm); font-weight: var(--weight-normal); }
+.is-compact .ord-callpop-actions { flex-direction: row; }
+.is-compact .ord-callpop-actions .ds-btn { height: auto; min-height: 36px; padding: 0 14px; font-size: var(--text-sm); }
+.is-compact .ord-callpop-actions .ds-btn svg { width: 16px; height: 16px; }
+.is-compact .ord-callpop-answer { order: 0; }
+/* Picked up on the phone: no ringing - calm card, steady icon, no countdown */
+.ord-callpop-card.is-answered { animation: ord-callpop-in .28s cubic-bezier(.2, .9, .3, 1.2); box-shadow: var(--shadow-lg); border-color: var(--color-primary); }
+.ord-callpop-card.is-answered .ord-callpop-icon { animation: none; background: var(--color-primary); }
+.ord-callpop-card.is-answered .ord-callpop-label { color: var(--color-primary); }
+
+/* Ring time left */
+.ord-callpop-timer {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 5px;
+    background: var(--color-success); transform-origin: left;
+    animation: ord-countdown linear forwards;
+}
+.is-compact .ord-callpop-timer { height: 3px; }
+.ord-callpop-more {
+    display: inline-flex; align-items: center; gap: 10px;
+    align-self: center; padding: 4px 6px 4px 12px; border-radius: var(--radius-pill);
+    background: var(--color-success); color: #fff;
+    font: var(--weight-semibold) var(--text-xs)/1.4 var(--font-sans);
+    box-shadow: var(--shadow-lg);
+}
+
+.ord-callpop-more button {
+    padding: 2px 10px; border: 0; border-radius: var(--radius-pill);
+    background: rgba(255,255,255,.22); color: #fff;
+    font: inherit; cursor: pointer;
+}
+.ord-callpop-more button:hover { background: rgba(255,255,255,.35); }
+
+@media (max-width: 600px) {
+    .ord-callpop-card { flex-wrap: wrap; }
+    .ord-callpop-who { font-size: var(--text-xl); }
+    .ord-callpop-actions { width: 100%; flex-direction: row; }
+    .ord-callpop-actions .ds-btn { flex: 1; justify-content: center; }
+}
+
+@keyframes ord-callpop-in {
+    from { transform: translateY(-24px) scale(.96); opacity: 0; }
+    to   { transform: none; opacity: 1; }
+}
+@keyframes ord-countdown {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+@keyframes ord-glow {
+    0%, 100% { box-shadow: var(--shadow-lg), 0 0 0 0 rgba(0,166,62,.0); }
+    50%      { box-shadow: var(--shadow-lg), 0 0 0 6px rgba(0,166,62,.18); }
+}
+@keyframes ord-shake {
+    0%, 50%, 100% { transform: rotate(0); }
+    5%, 15%, 25%, 35% { transform: rotate(-14deg); }
+    10%, 20%, 30%, 40% { transform: rotate(14deg); }
+}
+@keyframes ord-flash {
+    0%, 100% { opacity: .15; }
+    50%      { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ord-callpop-card { animation: none; box-shadow: var(--shadow-lg), 0 0 0 4px rgba(0,166,62,.18); }
+    .ord-callpop-icon { animation: none; }
+}
+
+/* ---------- Bell: missed calls and call history ---------- */
+.ord-bell { position: relative; }
+.ord-bell-badge {
+    position: absolute; top: -3px; right: -3px;
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border: 2px solid var(--surface-card); border-radius: var(--radius-pill);
+    background: var(--color-danger); color: #fff;
+    font: var(--weight-bold) 10px/14px var(--font-sans); text-align: center;
+}
+.ord-bell.has-alerts { color: var(--color-danger); }
+/* A call is ringing (also one ignored here): green and shaking, like the top bar */
+.ord-bell.is-ringing { background: var(--color-success); color: #fff; }
+.ord-bell.is-ringing:hover { background: var(--color-success-hover, var(--green-700)); }
+.ord-bell.is-ringing svg { animation: ord-shake 1.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .ord-bell.is-ringing svg { animation: none; } }
+
+.ord-bell-search { margin: 10px 16px 2px; }
+.ord-bell-search > .ds-field { padding-left: 34px; padding-right: 30px; }
+.ord-bell-clear {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    display: inline-flex; padding: 3px; border: 0; border-radius: var(--radius-pill);
+    background: transparent; color: var(--text-muted); cursor: pointer;
+}
+.ord-bell-clear:hover { color: var(--text-heading); background: var(--surface-hover); }
+
+.ord-bell-panel {
+    position: absolute; top: calc(100% + 8px); right: 0; z-index: 30;
+    display: flex; flex-direction: column;
+    width: min(420px, calc(100vw - 24px)); max-height: min(560px, calc(100vh - 90px));
+    background: var(--surface-card); color: var(--text-body);
+    border: 1px solid var(--border-default); border-radius: var(--radius-card);
+    box-shadow: var(--shadow-dropdown);
+}
+.ord-bell-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-default);
+}
+.ord-bell-head strong { font-size: var(--text-md); color: var(--text-heading); }
+.ord-bell-answer { background: var(--color-success); border: 1px solid var(--color-success); color: #fff; }
+.ord-bell-answer:hover { background: var(--color-success-hover, var(--green-700)); }
+.ord-bell-open { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-primary); }
+.ord-bell-scroll { overflow: auto; padding-bottom: 6px; }
+.ord-bell-section {
+    padding: 12px 16px 6px;
+    font: var(--weight-bold) var(--text-2xs)/1.4 var(--font-sans);
+    letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted);
+}
+.ord-bell-empty { padding: 8px 16px 14px; font-size: var(--text-sm); color: var(--text-muted); }
+.ord-bell-row { display: flex; align-items: center; gap: 10px; padding: 8px 16px; }
+.ord-bell-row:hover { background: var(--surface-hover); }
+.ord-bell-icon {
+    display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+    width: 30px; height: 30px; border-radius: var(--radius-pill);
+    background: var(--surface-sunken); color: var(--text-muted);
+}
+.ord-bell-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.ord-bell-who {
+    font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--text-heading);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ord-bell-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-size: var(--text-xs); color: var(--text-muted); }
+.ord-bell-status { font-weight: var(--weight-semibold); }
+.ord-bell-actions { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+.ord-bell-actions .ord-btn-sm { height: 28px; padding: 0 10px; }
+
+.ord-bell-row.is-danger .ord-bell-icon  { background: var(--color-danger-soft);  color: var(--color-danger); }
+.ord-bell-row.is-danger .ord-bell-status { color: var(--color-danger); }
+.ord-bell-row.is-warning .ord-bell-icon { background: var(--color-warning-soft); color: var(--color-warning); }
+.ord-bell-row.is-warning .ord-bell-status { color: var(--color-warning); }
+.ord-bell-row.is-success .ord-bell-icon { background: var(--color-success-soft); color: var(--color-success); }
+.ord-bell-row.is-success .ord-bell-status { color: var(--color-success); }
+.ord-bell-row.is-info .ord-bell-icon    { background: var(--tile-active-bg);    color: var(--color-primary); }
+.ord-bell-row.is-info .ord-bell-status  { color: var(--color-primary); }
+
+/* ---------- Order modal: the client on the left, the order on the right ---------- */
+.ord-modal-body { display: flex; flex-direction: column; }
+/* Client, order, last orders: the client column is 0.7 of the other two, and the modal is 0.9
+   of the screen so the order and last orders keep the width three equal columns had.
+   .is-xl in the selector: dialog.css (.ds-dialog.is-xl, 1180px) loads after this file and would win a tie. */
+.ds-dialog.is-xl.ord-modal { max-width: min(1980px, calc((100vw - 48px) * .9)); height: min(980px, 100%); }
+.ord-form {
+    flex: 1; min-height: 0;
+    display: grid; gap: 20px;
+    grid-template-columns: minmax(0, .7fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: "client order history";
+}
+.ord-pane-client  { grid-area: client; }
+.ord-pane-order   { grid-area: order; }
+.ord-pane-history { grid-area: history; }
+.ord-pane { display: flex; flex-direction: column; gap: var(--form-row-gap); min-height: 0; }
+.ord-pane-client {
+    padding: 16px;
+    border: 1px solid var(--border-default); border-radius: var(--radius-card);
+    background: var(--surface-sunken);
+    overflow: auto;
+}
+.ord-pane-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; }
+.ord-pane-title {
+    display: inline-flex; align-items: center; gap: 8px; margin: 0;
+    font: var(--weight-bold) var(--text-md)/1.3 var(--font-sans); color: var(--text-heading);
+}
+.ord-pane-title svg { color: var(--color-primary); }
+.ord-pane-title .ds-req { margin-left: -6px; color: var(--text-required); }
+
+/* The caller's number, from the call */
+.ord-caller {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px; border-radius: var(--radius-md);
+    background: var(--color-success-soft); color: var(--color-success);
+    font-size: var(--text-sm); font-weight: var(--weight-semibold);
+}
+.ord-caller svg, .ord-caller span { flex: 0 0 auto; }
+.ord-caller strong { margin-left: auto; min-width: 0; font-size: var(--text-md); white-space: normal; overflow-wrap: anywhere; text-align: right; }
+
+/* "430 / 500" under a long field */
+.ord-hint-row { display: flex; justify-content: space-between; gap: 12px; }
+.ord-char-count { margin-left: auto; flex: 0 0 auto; font-size: var(--text-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.ord-char-count.is-full { color: var(--color-danger); font-weight: var(--weight-semibold); }
+
+/* The order box takes all the height the address leaves, so a long order fits without scrolling */
+.ord-order-field { flex: 1; min-height: 240px; }
+/* ---------- Rich text order box (RichTextEditor.jsx) ---------- */
+.ord-rte {
+    flex: 1; min-height: 200px;
+    display: flex; flex-direction: column;
+    background: var(--surface-card);
+    border: 1px solid var(--border-field); border-radius: var(--radius-field);
+    transition: var(--transition-control);
+}
+.ord-rte:focus-within { border-color: var(--border-focus); box-shadow: var(--ring-focus); }
+.ord-rte-toolbar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 2px;
+    padding: 5px 6px;
+    border-bottom: 1px solid var(--border-default);
+    background: var(--surface-header);
+    border-radius: var(--radius-field) var(--radius-field) 0 0;
+}
+.ord-rte-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 28px; padding: 0;
+    border: 0; border-radius: var(--radius-sm, 6px);
+    background: transparent; color: var(--text-label); cursor: pointer;
+}
+.ord-rte-btn:hover { background: var(--surface-hover); color: var(--text-heading); }
+.ord-rte-btn.is-active { background: var(--tile-active-bg); color: var(--color-primary); }
+.ord-rte-btn:focus-visible, .ord-rte-color:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+.ord-rte-sep { width: 1px; height: 18px; margin: 0 5px; background: var(--border-default); }
+.ord-rte-color {
+    width: 18px; height: 18px; margin: 0 2px; padding: 0;
+    border: 2px solid var(--surface-card); border-radius: var(--radius-pill);
+    box-shadow: 0 0 0 1px var(--border-strong);
+    cursor: pointer;
+}
+.ord-rte-color.is-default { background: var(--text-body); }
+.ord-rte-color:hover { transform: scale(1.15); }
+.ord-rte-content {
+    position: relative;
+    flex: 1; min-height: 0; overflow: auto;
+    padding: 12px 14px;
+    font-size: var(--text-md); line-height: 1.6; color: var(--text-body);
+    outline: none; overflow-wrap: anywhere;
+}
+.ord-rte-content p, .ord-rte-content div { margin: 0; }
+.ord-rte-content ul, .ord-rte-content ol { margin: 0; padding-left: 22px; }
+.ord-rte-content.is-empty::before {
+    content: attr(data-placeholder);
+    position: absolute; left: 14px; right: 14px; top: 12px;
+    color: var(--text-placeholder); pointer-events: none;
+}
+.ord-status-field { flex: 0 0 auto; }
+
+/* The client's last orders: big and readable, seen at a glance while the client is on the phone */
+.ord-pane-history {
+    padding: 16px;
+    border: 1px solid var(--border-default); border-radius: var(--radius-card);
+    background: var(--surface-sunken);
+    overflow: auto;
+}
+.ord-history-empty { padding: 24px 8px; text-align: center; font-size: var(--text-sm); color: var(--text-muted); }
+.ord-history-card {
+    display: flex; flex-direction: column; gap: 8px; flex: 0 0 auto;
+    padding: 14px 16px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default); border-radius: var(--radius-md);
+}
+.ord-history-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ord-history-no { font: var(--weight-bold) var(--text-lg)/1.2 var(--font-sans); color: var(--text-heading); font-variant-numeric: tabular-nums; }
+.ord-history-date { font-size: var(--text-sm); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.ord-history-head .ord-status { margin-left: auto; }
+.ord-history-text { font-size: var(--text-lg); line-height: 1.55; color: var(--text-body); overflow-wrap: anywhere; }
+.ord-history-text p, .ord-history-text div { margin: 0; }
+.ord-history-text ul, .ord-history-text ol { margin: 0; padding-left: 22px; }
+.ord-history-address { display: flex; align-items: flex-start; gap: 6px; font-size: var(--text-sm); color: var(--color-primary); overflow-wrap: anywhere; min-width: 0; }
+.ord-history-address svg { flex: 0 0 auto; margin-top: 2px; }
+
+
+.ord-client-nbr { margin-left: 6px; color: var(--text-muted); font-weight: var(--weight-normal); font-size: var(--text-xs); }
+.ord-phone { display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
+
+.ord-client-card {
+    display: flex; flex-direction: column;
+    border: 1px solid var(--border-focus);
+    border-radius: var(--radius-md);
+    background: var(--surface-card);
+    overflow: hidden;
+}
+.ord-client-card-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 12px 14px 14px;
+    background: var(--surface-selected);
+    border-bottom: 1px solid var(--border-default);
+}
+.ord-client-card .ord-client-avatar { width: 44px; height: 44px; }
+.ord-client-name.is-lg { font-size: var(--text-lg); line-height: 1.25; }
+.ord-client-sub { display: inline-flex; align-items: center; gap: 4px; margin-top: 2px; font-size: var(--text-xs); color: var(--text-muted); }
+.ord-client-details { margin: 0; padding: 4px 14px; }
+.ord-detail { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 10px; padding: 11px 0; }
+.ord-detail + .ord-detail { border-top: 1px solid var(--border-table); }
+.ord-detail dt { display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-sm); color: var(--text-muted); }
+.ord-detail dd { margin: 0; font-size: var(--text-md); line-height: 1.5; color: var(--text-body); white-space: pre-line; overflow-wrap: anywhere; }
+.ord-client-avatar {
+    display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+    width: 38px; height: 38px; border-radius: var(--radius-pill);
+    background: var(--color-primary); color: #fff;
+}
+.ord-client-info { flex: 1; min-width: 0; }
+.ord-client-name { font-weight: var(--weight-semibold); color: var(--text-heading); overflow-wrap: anywhere; }
+.ord-client-phones { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 2px; font-size: var(--text-sm); color: var(--text-label); overflow-wrap: anywhere; }
+.ord-client-address { margin-top: 2px; font-size: var(--text-xs); color: var(--text-muted); overflow-wrap: anywhere; }
+/* a long phone number wraps instead of pushing out of the client card */
+.ord-detail dd .ord-num { white-space: normal; }
+
+@media (max-width: 767px) {
+    /* Phones: the header and toolbar wrap too tall for an inner scroll area, so the whole page scrolls instead */
+    .ord-app { height: auto; min-height: 100vh; }
+    .ord-table-wrap { overflow-x: auto; overflow-y: visible; }
+    .ord-main { padding: 12px; }
+    .ord-card-header, .ord-toolbar { padding-left: 14px; padding-right: 14px; }
+    .ord-actions { width: 100%; justify-content: space-between; }
+    .ord-toolbar-search { width: 100%; }
+}
+
+/* ---------- Export menu, row actions ---------- */
+.ord-menu-right { left: auto; right: 0; }
+.ord-menu-print svg { color: var(--color-primary) !important; }
+.ord-row-actions { white-space: nowrap; }
+.ord-row-actions .ds-btn-icon + .ds-btn-icon { margin-left: 2px; }
+
+/* ---------- Client modes in the order modal ---------- */
+.ord-label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; }
+.ord-locked { display: inline-flex; align-items: center; gap: 4px; }
+
+.ord-new-client { display: flex; flex-direction: column; gap: var(--form-row-gap); }
+
+/* Delivery address */
+.ord-label-icon { vertical-align: -2px; margin-right: 2px; color: var(--color-primary); }
+.ord-seg-sm > button { height: 26px; padding: 0 10px; font-size: var(--text-xs); }
+/* Same look as the order box, just shorter */
+/* textarea.ds-field (design system) would make the textarea auto height: match its specificity */
+textarea.ord-address-input,
+.ord-address-view { box-sizing: border-box; height: 110px; min-height: 110px; padding: 12px 14px; resize: none; font-size: var(--text-md); line-height: 1.6; }
+.ord-address-view {
+    overflow: auto;
+    border: 1px solid var(--border-default); border-radius: var(--radius-md);
+    background: var(--surface-sunken); color: var(--text-body);
+    white-space: pre-line; overflow-wrap: anywhere;
+}
+
+/* no room for three columns: two of the same width, the last orders under the client */
+@media (max-width: 1280px) {
+    .ds-dialog.is-xl.ord-modal { max-width: none; }
+    .ord-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: auto minmax(0, 1fr);
+        grid-template-areas: "client order" "history order";
+    }
+}
+@media (max-width: 900px) {
+    /* one column, as tall as its content: the dialog body scrolls */
+    .ord-form { flex: none; grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "client" "order" "history"; }
+    .ord-pane-history { overflow: visible; }
+    .ord-pane-client { overflow: visible; }
+}
+
+/* Phones: rows wrap instead of running off the screen, the footer buttons share the width,
+   and fields are 16px so iOS doesn't zoom the page when one is tapped */
+@media (max-width: 767px) {
+    .ds-dialog-scrim .ds-dialog.is-xl.ord-modal { max-width: none; height: 100%; }
+    .ord-pane-head, .ord-label-row { flex-wrap: wrap; }
+    .ord-modal .ds-dialog-footer { flex-wrap: wrap; gap: 8px; }
+    .ord-modal .ds-dialog-footer .ds-btn { flex: 1 1 auto; justify-content: center; }
+    .ord-modal .ds-field, .ord-modal .ord-rte-content, .ord-status-input { font-size: 16px; }
+    .ord-order-field { min-height: 280px; }
+}
+
+/* ---------- Several clients share the caller's number ---------- */
+.ord-links { display: inline-flex; gap: 8px; }
+.ord-choose { display: flex; flex-direction: column; gap: 8px; }
+.ord-choose-item {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--border-default); border-radius: var(--radius-md);
+    background: var(--surface-card); color: var(--text-body);
+    font: inherit; text-align: left; cursor: pointer;
+    transition: var(--transition-control);
+}
+.ord-choose-item:hover { border-color: var(--border-focus); background: var(--surface-selected); }
+.ord-choose-item:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+.ord-choose-info { display: flex; flex-direction: column; min-width: 0; }
+.ord-client-avatar.is-sm { width: 30px; height: 30px; }
+
+/* ---------- Client field that opens the picker dialog ---------- */
+.ord-pick-field {
+    display: flex; align-items: center; gap: 10px;
+    text-align: left; cursor: pointer; color: var(--text-placeholder);
+}
+.ord-pick-field:hover { border-color: var(--border-focus); }
+.ord-pick-field:focus-visible { border-color: var(--border-focus); box-shadow: var(--ring-focus); }
+.ord-pick-icon { flex: 0 0 auto; }
+
+/* ---------- Small secondary buttons (client actions in the order modal) ---------- */
+.ord-btn-sm { height: 32px; padding: 0 12px; gap: 6px; font-size: var(--text-sm); }
+
+/* ---------- Table footer: rows per page and pages ---------- */
+.ord-table-footer {
+    flex-shrink: 0;
+    padding: 12px var(--card-padding);
+    border-top: 1px solid var(--border-default);
+    background: var(--surface-card);
+}
+.ord-table-footer .ds-pagination { justify-content: space-between; gap: 12px 24px; }
+.ord-table-footer .ds-pagination-size select { width: 76px; height: 34px; padding: 0 10px; }
+.ord-table-footer .ds-pagination-range { margin-right: auto; color: var(--text-label); }
+.ord-table-footer .ds-page-btn { min-width: 34px; height: 34px; }
+.ord-table tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 767px) {
+    .ord-table-footer .ds-pagination { justify-content: center; }
+    .ord-table-footer .ds-pagination-range { margin-right: 0; }
+}

@@ -1,0 +1,30 @@
+/* Light/dark switch (see useTheme.js). */
+
+/* View Transitions: the whole page cross-fades once. */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 450ms;
+    animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
+/*
+ * The switch is lifted out of the page snapshot and shown live, so its knob slide and colour
+ * change play normally on top of the cross-fade instead of being frozen in a snapshot.
+ */
+.vr-switch-track { view-transition-name: theme-switch; }
+::view-transition-old(theme-switch) { display: none; }
+::view-transition-new(theme-switch) { animation: none; }
+::view-transition-group(theme-switch) { animation: none; }
+
+/* Fallback without View Transitions: every element eases its colours together. */
+html.theme-fading,
+html.theme-fading *:not(.vr-switch-thumb),
+html.theme-fading *::before,
+html.theme-fading *::after {
+    transition: background-color 450ms cubic-bezier(.4, 0, .2, 1),
+        color 450ms cubic-bezier(.4, 0, .2, 1),
+        border-color 450ms cubic-bezier(.4, 0, .2, 1),
+        fill 450ms cubic-bezier(.4, 0, .2, 1),
+        stroke 450ms cubic-bezier(.4, 0, .2, 1),
+        box-shadow 450ms cubic-bezier(.4, 0, .2, 1) !important;
+}

@@ -1,0 +1,18 @@
+/* Sortable table headers (see sortable.jsx) */
+.ds-num { text-align: right !important; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ds-sort {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+.ds-sort.is-numeric { flex-direction: row-reverse; }
+.ds-sort svg { color: var(--text-placeholder); transition: color var(--duration-fast) var(--ease-standard); }
+.ds-sort:hover svg, .ds-sort.is-active svg { color: var(--color-primary); }
+.ds-sort.is-active { color: var(--text-heading); }
+.ds-sort:focus-visible { outline: none; box-shadow: var(--ring-focus); border-radius: var(--radius-xs); }

@@ -1,0 +1,16 @@
+@Main_HostAddress = http://localhost:5213
+
+### Simulate a call from the caller-ID phone app
+POST {{Main_HostAddress}}/api/incoming-call
+Content-Type: application/json
+X-Api-Key: REDACTED
+
+{ "mobileNumber": "03123456" }
+
+### Orders
+GET {{Main_HostAddress}}/api/Orders
+Accept: application/json
+
+### Call history (bell)
+GET {{Main_HostAddress}}/api/Orders/Calls?take=20
+Accept: application/json
