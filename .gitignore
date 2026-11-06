@@ -36,3 +36,6 @@ Orders Frontend/build/
 # Test and tooling
 **/coverage/
 *.binlog
+
+# Installers (binaries, kept out of the repo)
+Installers/
